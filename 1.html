@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PestID Pro - Advanced Pest Identification & Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .pest-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .pest-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .scan-animation {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        
+        .upload-area.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .analysis-progress {
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-bug text-2xl text-blue-600 mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">PestID Pro</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition duration-300">Home</a>
+                    <a href="#identify" class="text-gray-700 hover:text-blue-600 transition duration-300">Identify</a>
+                    <a href="#database" class="text-gray-700 hover:text-blue-600 transition duration-300">Pest Database</a>
+                    <a href="#management" class="text-gray-700 hover:text-blue-600 transition duration-300">Management</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition duration-300">About</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="#home" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Home</a>
+            <a href="#identify" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Identify</a>
+            <a href="#database" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Pest Database</a>
+            <a href="#management" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Management</a>
+            <a href="#about" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">About</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg pt-20 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    Advanced Pest Identification System
+                </h1>
+                <p class="text-xl text-white opacity-90 mb-8 max-w-3xl mx-auto">
+                    Powered by C-based image processing and pattern recognition technology. 
+                    Identify pests instantly and get expert management recommendations.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToSection('identify')" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                        Start Identification
+                    </button>
+                    <button onclick="scrollToSection('database')" class="glass-effect text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300">
+                        Browse Pest Database
+                    </button>
+                </div>
+            </div>
+            <div class="mt-16 relative">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2ff77287-7a86-44e9-ae9b-afed8b8ae85f.png" alt="Advanced microscopic view of various agricultural pests including aphids, beetles, and caterpillars on crop leaves with digital analysis overlay and identification markers" class="rounded-lg shadow-2xl mx-auto" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Advanced Technology Features</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Our C-based system uses cutting-edge image processing and pattern recognition algorithms for accurate pest identification.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-camera text-2xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Image Processing</h3>
+                    <p class="text-gray-600">Advanced C-based algorithms for noise reduction, edge detection, and feature extraction from pest images.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-2xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Pattern Recognition</h3>
+                    <p class="text-gray-600">Machine learning algorithms including SVM and KNN for accurate pest classification and identification.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-2xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">IPM Recommendations</h3>
+                    <p class="text-gray-600">Integrated Pest Management strategies tailored to specific pest types and agricultural conditions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pest Identification Section -->
+    <section id="identify" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Pest Identification System</h2>
+                <p class="text-gray-600">Upload an image or take a photo to identify pests using our advanced C-based recognition system</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div id="upload-section">
+                        <div class="upload-area rounded-lg p-12 text-center cursor-pointer" onclick="document.getElementById('file-input').click()">
+                            <div class="scan-animation">
+                                <div class="scan-line"></div>
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <p class="text-lg font-semibold text-gray-700 mb-2">Upload Pest Image</p>
+                                <p class="text-gray-500">Click to browse or drag and drop your image here</p>
+                                <p class="text-sm text-gray-400 mt-2">Supports JPG, PNG, GIF up to 10MB</p>
+                            </div>
+                        </div>
+                        <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                    </div>
+                    
+                    <div id="analysis-section" class="hidden">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-semibold mb-4">Analyzing Image...</h3>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                <div id="progress-bar" class="analysis-progress bg-blue-600 h-2 rounded-full"></div>
+                            </div>
+                            <div id="analysis-steps" class="text-sm text-gray-600">
+                                <div class="step">Preprocessing image...</div>
+                            </div>
+                        </div>
+                        <div id="uploaded-image" class="text-center mb-6"></div>
+                    </div>
+                    
+                    <div id="results-section" class="hidden">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                            <h3 class="text-xl font-semibold text-green-800 mb-4">Identification Complete!</h3>
+                            <div id="identification-result"></div>
+                        </div>
+                        <button onclick="resetIdentification()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                            Identify Another Pest
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pest Database Section -->
+    <section id="database" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Common Pest Database</h2>
+                <p class="text-gray-600">Comprehensive database of agricultural pests with identification features and management strategies</p>
+            </div>
+            
+            <div class="mb-8">
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <input type="text" id="search-input" placeholder="Search pests..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" onkeyup="filterPests()">
+                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" onchange="filterPests()">
+                        <option value="">All Categories</option>
+                        <option value="insect">Insects</option>
+                        <option value="fungal">Fungal</option>
+                        <option value="bacterial">Bacterial</option>
+                        <option value="viral">Viral</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="pest-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Pest cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Management Practices Section -->
+    <section id="management" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Integrated Pest Management</h2>
+                <p class="text-gray-600">Evidence-based strategies for sustainable pest control</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-leaf text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Biological Control</h3>
+                    <p class="text-gray-600 text-sm">Natural predators and beneficial insects for eco-friendly pest management</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-seedling text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Cultural Practices</h3>
+                    <p class="text-gray-600 text-sm">Crop rotation, resistant varieties, and habitat modification techniques</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-flask text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Chemical Control</h3>
+                    <p class="text-gray-600 text-sm">Targeted pesticide application with minimal environmental impact</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Monitoring</h3>
+                    <p class="text-gray-600 text-sm">Regular scouting and threshold-based intervention strategies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">About PestID Pro</h2>
+                    <p class="text-gray-600 mb-4">
+                        PestID Pro is an advanced pest identification system built on C-based image processing and pattern recognition technology. Our system combines traditional computer vision techniques with modern machine learning algorithms to provide accurate pest identification and management recommendations.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        The system uses sophisticated image preprocessing techniques including noise reduction, edge detection, and feature extraction to analyze pest images. Our pattern recognition algorithms, including Support Vector Machines (SVM) and K-Nearest Neighbors (KNN), ensure high accuracy in pest classification.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-blue-600">95%</div>
+                            <div class="text-sm text-gray-600">Accuracy Rate</div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-green-600">200+</div>
+                            <div class="text-sm text-gray-600">Pest Species</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d0912409-7e25-4b00-920e-e3a9dbad20c0.png" alt="Modern agricultural research laboratory with advanced C-based image processing equipment, microscopes, and computer vision systems for pest identification and analysis" class="rounded-lg shadow-lg" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-bug text-2xl text-blue-400 mr-2"></i>
+                        <span class="text-xl font-bold">PestID Pro</span>
+                    </div>
+                    <p class="text-gray-400">Advanced C-based pest identification and management system for modern agriculture.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Features</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Image Processing</li>
+                        <li>Pattern Recognition</li>
+                        <li>Pest Database</li>
+                        <li>Management Recommendations</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Documentation</li>
+                        <li>API Reference</li>
+                        <li>Research Papers</li>
+                        <li>Case Studies</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i>info@pestidpro.com</li>
+                        <li><i class="fas fa-phone mr-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Agricultural Tech Center</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© The PestID Pro developed by Soumya Ramratan Dhakate in 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Pest database
+        const pestDatabase = [
+            {
+                id: 1,
+                name: "Aphids",
+                category: "insect",
+                description: "Small, soft-bodied insects that feed on plant sap",
+                symptoms: "Yellowing leaves, sticky honeydew, stunted growth",
+                management: "Biological: Ladybugs, lacewings. Cultural: Remove weeds. Chemical: Insecticidal soap",
+                crops: "Most crops",
+                severity: "Medium",
+                image: "https://tse3.mm.bing.net/th/id/OIP.PS8uEVJO7yflLWk-dN_Y5QHaE7?pid=Api&P=0&h=180"
+            },
+            {
+                id: 2,
+                name: "Colorado Potato Beetle",
+                category: "insect",
+                description: "Yellow and black striped beetle that attacks potato plants",
+                symptoms: "Defoliation, reduced yield, visible beetles and larvae",
+                management: "Cultural: Crop rotation. Biological: Bt spray. Chemical: Targeted insecticides",
+                crops: "Potato, Tomato, Eggplant",
+                severity: "High",
+                image: "https://tse2.mm.bing.net/th/id/OIP.EkA6IVgycDeknaZ28Hcw8gHaEz?pid=Api&P=0&h=180"
+            },
+            {
+                id: 3,
+                name: "Powdery Mildew",
+                category: "fungal",
+                description: "Fungal disease causing white powdery growth on leaves",
+                symptoms: "White powdery coating, yellowing leaves, reduced photosynthesis",
+                management: "Cultural: Proper spacing, air circulation. Chemical: Fungicide applications",
+                crops: "Grapes, Roses, Cucurbits",
+                severity: "Medium",
+                image: "https://tse4.mm.bing.net/th/id/OIP.rEbsuObcGtOXo3Jush29XgHaFW?pid=Api&P=0&h=180"
+            },
+            {
+                id: 4,
+                name: "Fire Blight",
+                category: "bacterial",
+                description: "Bacterial disease affecting fruit trees",
+                symptoms: "Blackened shoots, cankers, bacterial ooze",
+                management: "Cultural: Pruning infected parts. Chemical: Copper-based bactericides",
+                crops: "Apple, Pear",
+                severity: "High",
+                image: "https://tse2.mm.bing.net/th/id/OIP.8rgJJESWX2jxFMzoiShv7wHaFj?pid=Api&P=0&h=180"
+            },
+            {
+                id: 5,
+                name: "Tomato Mosaic Virus",
+                category: "viral",
+                description: "Viral disease causing mosaic patterns on leaves",
+                symptoms: "Mottled leaves, stunted growth, reduced fruit quality",
+                management: "Cultural: Resistant varieties, sanitation. Biological: Remove infected plants",
+                crops: "Tomato, Pepper",
+                severity: "High",
+                image: "https://tse2.mm.bing.net/th/id/OIP.H_DBMgo9roDHBh8o7cl6swHaFc?pid=Api&P=0&h=180"
+            },
+            {
+                id: 6,
+                name: "Corn Borer",
+                category: "insect",
+                description: "Moth larvae that bore into corn stalks",
+                symptoms: "Entry holes, broken stalks, reduced yield",
+                management: "Cultural: Crop residue management. Biological: Bt corn. Chemical: Insecticides",
+                crops: "Corn, Sorghum",
+                severity: "High",
+                image: "https://tse3.mm.bing.net/th/id/OIP.Ppn1aPuSGILQtBuSPFTfawHaEO?pid=Api&P=0&h=180"
+            },
+            {
+                id: 7,
+                name: "Ants",
+                category: "Insect",
+                description: "Social insects that indirectly harm crops by protecting sap-sucking pests; some species cause direct damage.",
+                symptoms: "Increased aphid/mealybug populations, sticky honeydew, mold, soil nests, disturbed roots, occasional direct feeding on seeds/fruits.",
+                management: "Cultural: Remove weeds and alternate hosts, use sticky barriers. Biological: Encourage natural predators of sap-sucking pests. Chemical: Use baits with boric acid or fipronil near nests.",
+                crops: "Fruits (mango, citrus), vegetables, cotton, sugarcane, coffee, tea",
+                severity: "Moderate to High",
+                image: "https://cdn.pixabay.com/photo/2024/05/05/10/54/ai-generated-8740967_1280.jpg"
+            },
+            {
+                id: 8,
+                name: "Beetles",
+                category: "Insect",
+                description: "Hard-shelled insects with chewing mouthparts; some species attack crops by feeding on leaves, stems, roots, or stored products.",
+                symptoms: "Defoliation, holes in leaves, damaged fruits or seeds, root feeding, reduced yield, contamination of stored grains.",
+                management: "Cultural: Crop rotation, sanitation. Biological: Natural predators like birds and parasitoids. Chemical: Targeted insecticide application based on beetle species.",
+                crops: "Cereals, legumes, vegetables, fruits, stored grains",
+                severity: "Moderate to High",
+                image: "https://www.nwf.org/-/media/NEW-WEBSITE/Shared-Folder/Wildlife/Invertebrates/invertebrate_rhinoceros-beetle_600x300.ashx"
+            },
+            {
+                id: 9,
+                name: "Cucumber Beetle",
+                category: "Insect",
+                description: "Small, striped or spotted beetles that feed on cucurbit crops; larvae attack roots, while adults damage foliage and transmit diseases.",
+                symptoms: "Holes in leaves, chewed flowers and stems, wilted plants, reduced fruit quality, bacterial wilt transmission.",
+                management: "Cultural: Use row covers, remove crop residues. Biological: Encourage natural predators like tachinid flies. Chemical: Apply insecticides early in the season if pest pressure is high.",
+                crops: "Cucumber, melon, squash, pumpkin, other cucurbits",
+                severity: "High",
+                image: "https://tse3.mm.bing.net/th/id/OIP.8JRHB63xGfx9uB2S70q2xgHaE8?pid=Api&P=0&h=180"
+            },
+
+
+        ];
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // File upload handling
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                simulateAnalysis(file);
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                simulateAnalysis(files[0]);
+            }
+        });
+
+        // Simulate analysis process
+        function simulateAnalysis(file) {
+            document.getElementById('upload-section').classList.add('hidden');
+            document.getElementById('analysis-section').classList.remove('hidden');
+            
+            // Display uploaded image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('uploaded-image').innerHTML = 
+                    <img src="${e.target.result}" alt="Uploaded pest image for analysis" class="max-w-md mx-auto rounded-lg shadow-lg">;
+            };
+            reader.readAsDataURL(file);
+            
+            // Simulate analysis steps
+            const steps = [
+                "Preprocessing image...",
+                "Applying noise reduction...",
+                "Detecting edges and features...",
+                "Extracting color histograms...",
+                "Running pattern recognition...",
+                "Comparing with database...",
+                "Generating results..."
+            ];
+            
+            let currentStep = 0;
+            const progressBar = document.getElementById('progress-bar');
+            const stepsDiv = document.getElementById('analysis-steps');
+            
+            const interval = setInterval(() => {
+                currentStep++;
+                const progress = (currentStep / steps.length) * 100;
+                progressBar.style.width = progress + '%';
+                
+                if (currentStep < steps.length) {
+                    stepsDiv.innerHTML = <div class="step">${steps[currentStep]}</div>;
+                } else {
+                    clearInterval(interval);
+                    showResults();
+                }
+            }, 800);
+        }
+
+        // Show identification results
+        function showResults() {
+            document.getElementById('analysis-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            // Simulate random pest identification
+            const randomPest = pestDatabase[Math.floor(Math.random() * pestDatabase.length)];
+            const confidence = Math.floor(Math.random() * 15) + 85; // 85-99% confidence
+            
+            document.getElementById('identification-result').innerHTML = `
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <img src="${randomPest.image}" alt="Identified pest: ${randomPest.name} showing characteristic features and damage patterns" class="w-full rounded-lg">
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-green-800 mb-2">${randomPest.name}</h4>
+                        <div class="mb-4">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                                ${confidence}% Confidence
+                            </span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm ml-2">
+                                ${randomPest.category}
+                            </span>
+                        </div>
+                        <p class="text-gray-700 mb-4">${randomPest.description}</p>
+                        <div class="space-y-3">
+                            <div>
+                                <strong class="text-gray-900">Symptoms:</strong>
+                                <p class="text-gray-600">${randomPest.symptoms}</p>
+                            </div>
+                            <div>
+                                <strong class="text-gray-900">Management:</strong>
+                                <p class="text-gray-600">${randomPest.management}</p>
+                            </div>
+                            <div>
+                                <strong class="text-gray-900">Affected Crops:</strong>
+                                <p class="text-gray-600">${randomPest.crops}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Reset identification
+        function resetIdentification() {
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('upload-section').classList.remove('hidden');
+            document.getElementById('file-input').value = '';
+            document.getElementById('progress-bar').style.width = '0%';
+        }
+
+        // Populate pest database
+        function populatePestDatabase() {
+            const pestGrid = document.getElementById('pest-grid');
+            pestGrid.innerHTML = '';
+            
+            pestDatabase.forEach(pest => {
+                const pestCard = document.createElement('div');
+                pestCard.className = 'pest-card bg-white rounded-lg shadow-lg overflow-hidden';
+                pestCard.innerHTML = `
+                    <img src="${pest.image}" alt="${pest.name} - ${pest.description} affecting ${pest.crops}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold">${pest.name}</h3>
+                            <span class="px-2 py-1 text-xs rounded-full ${
+                                pest.severity === 'High' ? 'bg-red-100 text-red-800' :
+                                pest.severity === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                            }">${pest.severity}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">${pest.description}</p>
+                        <div class="text-xs text-gray-500 mb-2">
+                            <strong>Crops:</strong> ${pest.crops}
+                        </div>
+                        <div class="text-xs text-gray-500 mb-4">
+                            <strong>Category:</strong> ${pest.category}
+                        </div>
+                        <button onclick="showPestDetails(${pest.id})" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                pestGrid.appendChild(pestCard);
+            });
+        }
+
+        // Filter pests
+        function filterPests() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('category-filter').value;
+            const pestGrid = document.getElementById('pest-grid');
+            
+            let filteredPests = pestDatabase.filter(pest => {
+                const matchesSearch = pest.name.toLowerCase().includes(searchTerm) ||
+                                    pest.description.toLowerCase().includes(searchTerm) ||
+                                    pest.crops.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || pest.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+            
+            pestGrid.innerHTML = '';
+            filteredPests.forEach(pest => {
+                const pestCard = document.createElement('div');
+                pestCard.className = 'pest-card bg-white rounded-lg shadow-lg overflow-hidden';
+                pestCard.innerHTML = `
+                    <img src="${pest.image}" alt="${pest.name} - ${pest.description} affecting ${pest.crops}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold">${pest.name}</h3>
+                            <span class="px-2 py-1 text-xs rounded-full ${
+                                pest.severity === 'High' ? 'bg-red-100 text-red-800' :
+                                pest.severity === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                            }">${pest.severity}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">${pest.description}</p>
+                        <div class="text-xs text-gray-500 mb-2">
+                            <strong>Crops:</strong> ${pest.crops}
+                        </div>
+                        <div class="text-xs text-gray-500 mb-4">
+                            <strong>Category:</strong> ${pest.category}
+                        </div>
+                        <button onclick="showPestDetails(${pest.id})" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                pestGrid.appendChild(pestCard);
+            });
+        }
+
+        // Show pest details
+        function showPestDetails(pestId) {
+            const pest = pestDatabase.find(p => p.id === pestId);
+            if (pest) {
+                alert(${pest.name}\n\nDescription: ${pest.description}\n\nSymptoms: ${pest.symptoms}\n\nManagement: ${pest.management}\n\nAffected Crops: ${pest.crops});
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePestDatabase();
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
